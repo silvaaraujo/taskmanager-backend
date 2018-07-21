@@ -13,6 +13,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
 
 import br.com.silvaaraujo.model.enuns.StatusTask;
 
@@ -26,7 +29,9 @@ public class Task implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name="titulo", nullable=false)
+	@NotEmpty(message="O título deve ser informado.")
+	@Length(min=5, max=20, message="O título deve possuir no mínimo 5 e no máximo 20 caracteres.")
+	@Column(name="titulo", nullable=false, length=20)
 	private String titulo;
 	
 	private String descricao;
@@ -38,10 +43,6 @@ public class Task implements Serializable {
 	@Column(name="data_edicao")
 	@Temporal(TemporalType.DATE)
 	private Date dataEdicao;
-	
-	@Column(name="data_remocao")
-	@Temporal(TemporalType.DATE)
-	private Date dataRemocao;
 	
 	@Column(name="data_conclusao")
 	@Temporal(TemporalType.DATE)
@@ -95,14 +96,6 @@ public class Task implements Serializable {
 
 	public void setDataEdicao(Date dataEdicao) {
 		this.dataEdicao = dataEdicao;
-	}
-
-	public Date getDataRemocao() {
-		return dataRemocao;
-	}
-
-	public void setDataRemocao(Date dataRemocao) {
-		this.dataRemocao = dataRemocao;
 	}
 
 	public Date getDataConclusao() {

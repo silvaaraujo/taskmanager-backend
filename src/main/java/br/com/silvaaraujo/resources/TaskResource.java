@@ -1,6 +1,7 @@
 package br.com.silvaaraujo.resources;
 
 import java.net.URI;
+import java.text.MessageFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -18,9 +19,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.silvaaraujo.exception.ObjectNotFoundException;
 import br.com.silvaaraujo.model.Task;
 import br.com.silvaaraujo.repository.TaskRepository;
-
 
 @RestController
 @RequestMapping(value="/tasks")
@@ -39,7 +40,8 @@ public class TaskResource {
 	@RequestMapping(method = RequestMethod.GET, value = "/{id}")	
 	public Task buscarPorId(@PathVariable("id") Long id) throws Exception {
 		Optional<Task> optional = this.taskRepository.findById(id);
-		return optional.isPresent() ? optional.get() : null;
+		return optional.orElseThrow(() -> 
+			new ObjectNotFoundException(MessageFormat.format("{0} nao encontrada com {1} : {2}", "Task", "id", id)));
 	}
 	
 	@Transactional
@@ -53,19 +55,21 @@ public class TaskResource {
 	@RequestMapping(method = RequestMethod.DELETE, value = "/{id}")	
 	public ResponseEntity<Void> remover(@PathVariable("id") Long id) throws Exception {
 		Optional<Task> optional = this.taskRepository.findById(id);
-		if (optional.isPresent()) this.taskRepository.deleteById(id);
+		if (!optional.isPresent()) 
+			throw new ObjectNotFoundException(MessageFormat.format("{0} nao encontrada com {1} : {2}", "Task", "id", id));
+		
+		this.taskRepository.deleteById(id);
 		return ResponseEntity.noContent().build();
 	}
 	
 	@RequestMapping(method=RequestMethod.PUT, value = "/{id}")	
-	public ResponseEntity<Void> atualizar(@PathVariable("id") Long id, @RequestBody Task task) {
-		
+	public ResponseEntity<Void> atualizar(@PathVariable("id") Long id, @Valid @RequestBody Task task) {
 		Optional<Task> optional = this.taskRepository.findById(id);
-		if (optional.isPresent()) {
-			task = this.mergeFromView(task, optional.get());
-			this.taskRepository.save(task);			
-		}
-		
+		if (!optional.isPresent()) 
+			throw new ObjectNotFoundException(MessageFormat.format("{0} nao encontrada com {1} : {2}", "Task", "id", id));
+			
+		task = this.mergeFromView(task, optional.get());
+		this.taskRepository.save(task);
 		return ResponseEntity.noContent().build();
 	}
 	
