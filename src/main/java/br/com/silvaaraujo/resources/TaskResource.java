@@ -1,6 +1,7 @@
 package br.com.silvaaraujo.resources;
 
 import java.net.URI;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,6 +55,25 @@ public class TaskResource {
 		Optional<Task> optional = this.taskRepository.findById(id);
 		if (optional.isPresent()) this.taskRepository.deleteById(id);
 		return ResponseEntity.noContent().build();
+	}
+	
+	@RequestMapping(method=RequestMethod.PUT, value = "/{id}")	
+	public ResponseEntity<Void> atualizar(@PathVariable("id") Long id, @RequestBody Task task) {
+		
+		Optional<Task> optional = this.taskRepository.findById(id);
+		if (optional.isPresent()) {
+			task = this.mergeFromView(task, optional.get());
+			this.taskRepository.save(task);			
+		}
+		
+		return ResponseEntity.noContent().build();
+	}
+	
+	private Task mergeFromView(Task taskView, Task taskBd) {
+		taskBd.setDataEdicao(new Date());
+		taskBd.setDescricao(taskView.getDescricao());
+		taskBd.setTitulo(taskView.getTitulo());
+		return taskBd;
 	}
 	
 }
