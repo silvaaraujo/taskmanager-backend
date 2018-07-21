@@ -21,6 +21,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.silvaaraujo.exception.ObjectNotFoundException;
 import br.com.silvaaraujo.model.Task;
+import br.com.silvaaraujo.model.enuns.StatusTask;
 import br.com.silvaaraujo.repository.TaskRepository;
 
 @RestController
@@ -69,6 +70,21 @@ public class TaskResource {
 			throw new ObjectNotFoundException(MessageFormat.format("{0} nao encontrada com {1} : {2}", "Task", "id", id));
 			
 		task = this.mergeFromView(task, optional.get());
+		this.taskRepository.save(task);
+		return ResponseEntity.noContent().build();
+	}
+	
+	
+	@RequestMapping(method=RequestMethod.PUT, value = "/concluida/{id}")	
+	public ResponseEntity<Void> concluir(@PathVariable("id") Long id) {
+		Optional<Task> optional = this.taskRepository.findById(id);
+		if (!optional.isPresent()) 
+			throw new ObjectNotFoundException(MessageFormat.format("{0} nao encontrada com {1} : {2}", "Task", "id", id));
+			
+		Task task = optional.get();
+		task.setDataEdicao(new Date());
+		task.setStatus(StatusTask.CONCLUIDA);
+		
 		this.taskRepository.save(task);
 		return ResponseEntity.noContent().build();
 	}

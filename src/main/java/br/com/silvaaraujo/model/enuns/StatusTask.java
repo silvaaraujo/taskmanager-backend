@@ -2,8 +2,7 @@ package br.com.silvaaraujo.model.enuns;
 
 public enum StatusTask {
 	PENDENTE("Pendente"),
-	CONCLUIDA("Concluída"),
-	REMOVIDA("Removida");
+	CONCLUIDA("Concluída");
 	
 	private String label;
 	
