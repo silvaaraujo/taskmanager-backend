@@ -49,5 +49,11 @@ public class TaskResource {
 		return ResponseEntity.created(uri).build();
 	}
 	
+	@RequestMapping(method = RequestMethod.DELETE, value = "/{id}")	
+	public ResponseEntity<Void> remover(@PathVariable("id") Long id) throws Exception {
+		Optional<Task> optional = this.taskRepository.findById(id);
+		if (optional.isPresent()) this.taskRepository.deleteById(id);
+		return ResponseEntity.noContent().build();
+	}
 	
 }
