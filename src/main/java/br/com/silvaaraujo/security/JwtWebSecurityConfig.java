@@ -48,6 +48,7 @@ public class JwtWebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 			.antMatchers(PUBLIC_ROUTES).permitAll() //permite acesso sem autenticacao
 			.antMatchers(HttpMethod.GET, PUBLIC_ROUTES_GET).permitAll() //permite acesso sem autenticacao somente para verbo GET
+			.antMatchers(HttpMethod.POST, "/login").permitAll()
 			.anyRequest().authenticated(); //para outras rotas exige autenticacao
 		
 		http.addFilter(new JwtAuthenticatonFilter(authenticationManager(), this.jwtUtil));

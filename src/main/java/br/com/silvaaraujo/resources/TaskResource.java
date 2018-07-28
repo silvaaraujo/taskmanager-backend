@@ -75,7 +75,7 @@ public class TaskResource {
 	}
 	
 	
-	@RequestMapping(method=RequestMethod.PUT, value = "/concluida/{id}")	
+	@RequestMapping(method=RequestMethod.PATCH, value = "/{id}")	
 	public ResponseEntity<Void> concluir(@PathVariable("id") Long id) {
 		Optional<Task> optional = this.taskRepository.findById(id);
 		if (!optional.isPresent()) 
