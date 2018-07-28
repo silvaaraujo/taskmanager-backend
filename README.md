@@ -22,5 +22,5 @@ Postman payload example:
     "senha": "yourpassword"
 }  
 
-At each request is generated a new token and added at the response.    
+For the future, I'm going to implement refresh token, where at each request, is generated a new token and added at the response.    
 
