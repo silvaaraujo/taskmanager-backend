@@ -24,9 +24,9 @@ public class AppStartupRunner implements ApplicationRunner {
 	}
 
 	private void initUser() {
-		Usuario usuario = usuarioRepository.findByEmail("user@mail.com");
+		Usuario usuario = usuarioRepository.findByEmail("supero@supero.com.br");
 		if (usuario == null) {
-			usuario = new Usuario("user@mail.com", passwordEncoder.encode("123"));
+			usuario = new Usuario("user@mail.com", passwordEncoder.encode("supero2018"));
 			this.usuarioRepository.save(usuario);
 		}
 	}
